@@ -19,7 +19,8 @@ import dk.sdu.mmmi.cbse.playersystem.PlayerPlugin;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game implements ApplicationListener {
+public class Game
+        implements ApplicationListener {
 
     @SuppressWarnings("FieldCanBeLocal")
     private static OrthographicCamera cam;
@@ -80,9 +81,7 @@ public class Game implements ApplicationListener {
     private void update() {
         // Update
         for (IEntityProcessingService entityProcessorService : entityProcessors) {
-            for (Entity e : world.getEntities()) {
-                entityProcessorService.process(gameData, world);
-            }
+            entityProcessorService.process(gameData, world);
         }
     }
 
