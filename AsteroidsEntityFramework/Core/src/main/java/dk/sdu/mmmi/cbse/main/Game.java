@@ -11,17 +11,20 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.managers.GameInputProcessor;
-import dk.sdu.mmmi.cbse.playersystem.PlayerPlugin;
+import dk.sdu.mmmi.cbse.playersystem.EnemyControlSystem;
+import dk.sdu.mmmi.cbse.playersystem.EnemyPlugin;
 import dk.sdu.mmmi.cbse.playersystem.PlayerControlSystem;
+import dk.sdu.mmmi.cbse.playersystem.PlayerPlugin;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Game implements ApplicationListener {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private static OrthographicCamera cam;
-    private ShapeRenderer sr;
-
     private final GameData gameData = new GameData();
+    private ShapeRenderer sr;
     private List<IEntityProcessingService> entityProcessors = new ArrayList<>();
     private List<IGamePluginService> entityPlugins = new ArrayList<>();
     private World world = new World();
@@ -38,14 +41,20 @@ public class Game implements ApplicationListener {
 
         sr = new ShapeRenderer();
 
-        Gdx.input.setInputProcessor(
-                new GameInputProcessor(gameData)
-        );
-        
+        Gdx.input.setInputProcessor(new GameInputProcessor(gameData));
+
+        // Add Player to game
         IGamePluginService playerPlugin = new PlayerPlugin();
         IEntityProcessingService playerProcess = new PlayerControlSystem();
         entityPlugins.add(playerPlugin);
         entityProcessors.add(playerProcess);
+
+        // Add Enemy to game
+        IGamePluginService enemyPlugin = new EnemyPlugin();
+        IEntityProcessingService enemyControlSystem = new EnemyControlSystem();
+        entityPlugins.add(enemyPlugin);
+        entityProcessors.add(enemyControlSystem);
+
         // Lookup all Game Plugins using ServiceLoader
         for (IGamePluginService iGamePlugin : entityPlugins) {
             iGamePlugin.start(gameData, world);
@@ -87,13 +96,9 @@ public class Game implements ApplicationListener {
             float[] shapex = entity.getShapeX();
             float[] shapey = entity.getShapeY();
 
-            for (int i = 0, j = shapex.length - 1;
-                    i < shapex.length;
-                    j = i++) {
-
+            for (int i = 0, j = shapex.length - 1; i < shapex.length; j = i++) {
                 sr.line(shapex[i], shapey[i], shapex[j], shapey[j]);
             }
-
             sr.end();
         }
     }

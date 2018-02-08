@@ -7,6 +7,8 @@ import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 
+import static com.badlogic.gdx.math.MathUtils.PI;
+
 public class PlayerPlugin implements IGamePluginService {
 
     private Entity player;
@@ -16,7 +18,7 @@ public class PlayerPlugin implements IGamePluginService {
 
     @Override
     public void start(GameData gameData, World world) {
-        
+
         // Add entities to the world
         player = createPlayerShip(gameData);
         world.addEntity(player);
@@ -24,18 +26,18 @@ public class PlayerPlugin implements IGamePluginService {
 
     private Entity createPlayerShip(GameData gameData) {
 
-        float deacceleration = 10;
+        float deceleration = 10;
         float acceleration = 200;
         float maxSpeed = 300;
         float rotationSpeed = 5;
         float x = gameData.getDisplayWidth() / 2;
         float y = gameData.getDisplayHeight() / 2;
-        float radians = 3.1415f / 2;
-        
+        float radians = PI / 2;
+
         Entity playerShip = new Player();
-        playerShip.add(new MovingPart(deacceleration, acceleration, maxSpeed, rotationSpeed));
+        playerShip.add(new MovingPart(deceleration, acceleration, maxSpeed, rotationSpeed));
         playerShip.add(new PositionPart(x, y, radians));
-        
+
         return playerShip;
     }
 
